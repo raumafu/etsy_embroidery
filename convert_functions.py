@@ -1,6 +1,5 @@
 import os
 import pyembroidery
-import subprocess
 import math
 
 def makeDir(output_folder):
@@ -23,22 +22,31 @@ def center_embroidery_pattern(input_file, pattern, hoop_center):
     return pattern
 
 
-def scale_and_save(input_file, output_folder, scale_factor):
+
+def get_size(input_file):
+    pattern = pyembroidery.read(input_file)
+    min_x, min_y, max_x, max_y = pattern.extents()
+    width = max_x - min_x
+    height = max_y - min_y
+    return width, height
+
+def resize_pattern(input_file, output_folder, scale_factor):
     pattern = pyembroidery.read(input_file)
     matrix = pyembroidery.EmbMatrix()
     matrix.post_scale(scale_factor, scale_factor)
     pattern.transform(matrix)
 
-    min_x, min_y, max_x, max_y = pattern.extents()
-    width = math.ceil((max_x - min_x) / 10)
-    height = math.ceil((max_y - min_y) / 10)
+    # Create output folder if it does not exist
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-    output_file = output_folder + f"\\bear_W{width}_H{height}.pes"
+    # Save the resized embroidery file
+    width, height = get_size(input_file)
+    new_width = math.ceil(width * scale_factor)
+    new_height = math.ceil(height * scale_factor)
+    output_file = os.path.join(output_folder, f"scaled_{new_width}x{new_height}.pes")
     pyembroidery.write(pattern, output_file)
 
-    print(f"File saved to: {output_file}")
+    # Print the size of the resized embroidery file
+    print(f"Resized {scale_factor}x: {new_width} x {new_height}")
 
-
-    for scale_factor in scale_factors:
-        center_embroidery_pattern(input_file, pattern, hoop_center)
-        scale_and_save(input_file, output_folder, scale_factor)
