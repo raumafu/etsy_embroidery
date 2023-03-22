@@ -8,11 +8,10 @@ emb_extension_write = ["dst","exp", "jef", "pes", "vp3", "xxx", "emb"]
 emb_extension_read = ["dst","exp", "hus", "jef", "pes", "vp3", "xxx", "dgt", "sew", "pcs", "pcm", "csd", "pec", "shv", "vip", "art", "emb"]
 
 
-#.get_as_stitchblock() returns a list of stitches
 
 
-#Create output folder if it doesn't exist
-makeDir(output_folder)
+input_file = "input.pes"
+output_file = "centered_output.pes"
+hoop_center = (240, 240)
 
-
-pyembroidery.convert(input_file, output_file)
+center_embroidery_file(input_file, output_file, hoop_center)
