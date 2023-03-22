@@ -1,6 +1,9 @@
 import os
 import pyembroidery
 import math
+import time
+import threading
+
 
 def makeDir(output_folder):
     if not os.path.exists(output_folder):
@@ -37,16 +40,15 @@ def resize_pattern(input_file, output_folder, scale_factor):
     pattern.transform(matrix)
 
     # Create output folder if it does not exist
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    makeDir(output_folder)
 
     # Save the resized embroidery file
     width, height = get_size(input_file)
     new_width = math.ceil(width * scale_factor)
     new_height = math.ceil(height * scale_factor)
-    output_file = os.path.join(output_folder, f"scaled_{new_width}x{new_height}.pes")
+    output_file = os.path.join(output_folder, f"scaled_{new_width / 100 }cm x {new_height / 100 }cm .pes")
     pyembroidery.write(pattern, output_file)
 
     # Print the size of the resized embroidery file
-    print(f"Resized {scale_factor}x: {new_width} x {new_height}")
+    # print(f"Resized {scale_factor}x: {new_width} x {new_height}")
 
