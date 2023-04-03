@@ -2,7 +2,7 @@ from convert_functions import *
 import threading
 import time
 
-
+#Variables
 input_file = r"C:\Users\Rau\Desktop\emb_prep\input.pes"
 output_folder = r"C:\Users\Rau\Desktop\emb_prep\scaled"
 hoop_center = (350, 350)
