@@ -1,34 +1,49 @@
 import requests
-from requests_oauthlib import OAuth1
 
-API_KEY = "cpw4vr97ap6h7po3wnlze8kt"
-API_SECRET = "lyk2jqo685"
-ACCESS_TOKEN = "your_access_token"
-ACCESS_TOKEN_SECRET = "your_access_token_secret"
+api_key = '98ikekm9n8s57wtq1nancxfz'
+shop_id = '33368777'
+listing_id = None
 
-# Set up OAuth1 authentication
-auth = OAuth1(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+# Step 1: Create a new listing
+listing_url = f'https://api.etsy.com/v3/application/shops/{shop_id}/listings'
 
-# Define listing data
 listing_data = {
-    "quantity": 1,
-    "title": "Sample Product",
-    "description": "This is a sample product listing.",
-    "price": 19.99,
-    "taxonomy_id": 688,  # You can find taxonomy IDs in Etsy's taxonomy API: https://developers.etsy.com/documentation/reference#operation/getAllTaxonomy
-    "who_made": "i_did",
-    "is_supply": "false",
-    "when_made": "made_to_order",
+    'title': 'Sample Listing',
+    'description': 'This is a sample listing.',
+    'price': '25.00',
+    'quantity': 1,
+    'who_made': 'i_did',
+    'is_supply': False,
+    'when_made': 'made_to_order',
 }
 
-# Make the API request
-response = requests.post(
-    "https://openapi.etsy.com/v3/application/listings", data=listing_data, auth=auth
-)
+headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': api_key,
+}
 
-# Check if the request was successful
+response = requests.post(listing_url, json=listing_data, headers=headers)
+
 if response.status_code == 201:
-    print("Listing created successfully!")
-    print(response.json())
+    listing = response.json()
+    listing_id = listing['results'][0]['listing_id']
+    print(f'Listing created with ID: {listing_id}')
 else:
-    print("Error creating listing:", response.text)
+    print(f'Failed to create listing. Status code: {response.status_code}')
+
+# Step 2: Upload images to the listing
+if listing_id is not None:
+    image_url = f'https://api.etsy.com/v3/application/listings/{listing_id}/images'
+
+    # Replace with paths to your image files
+    image_paths = [r"C:\Users\Rau\Documents\ShareX\Screenshots\2023-04\ES_nTqBrrhtrq.png"]
+
+    for image_path in image_paths:
+        with open(image_path, 'rb') as img_file:
+            files = {'image': img_file}
+            response = requests.post(image_url, headers={'x-api-key': api_key}, files=files)
+
+            if response.status_code == 201:
+                print(f'Successfully uploaded image: {image_path}')
+            else:
+                print(f'Failed to upload image: {image_path}. Status code: {response.status_code}')

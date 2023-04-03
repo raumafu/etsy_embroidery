@@ -37,3 +37,9 @@ end_time = time.time()
 # Calculate elapsed time
 elapsed_time = end_time - start_time
 print(f"Elapsed time: {elapsed_time:.2f} seconds")
+
+# Add google image recognition
+# Add multiple file type exports
+# Add ui for selecting input file and output folder
+# Add Etsy API integration
+# Creating output folder names based on input name in the ui
