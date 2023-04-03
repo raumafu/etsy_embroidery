@@ -1,49 +1,58 @@
 import requests
+import requests
+import webbrowser
+from urllib.parse import urlencode
+
+
 
 api_key = '98ikekm9n8s57wtq1nancxfz'
-shop_id = '33368777'
+shop_id = '577729910'
 listing_id = None
-
-# Step 1: Create a new listing
-listing_url = f'https://api.etsy.com/v3/application/shops/{shop_id}/listings'
-
-listing_data = {
-    'title': 'Sample Listing',
-    'description': 'This is a sample listing.',
-    'price': '25.00',
-    'quantity': 1,
-    'who_made': 'i_did',
-    'is_supply': False,
-    'when_made': 'made_to_order',
-}
 
 headers = {
     'Content-Type': 'application/json',
-    'x-api-key': api_key,
+    'Authorization': f'Bearer {api_key}
 }
 
-response = requests.post(listing_url, json=listing_data, headers=headers)
+base_url = 'https://api.etsy.com/v3/'
 
-if response.status_code == 201:
-    listing = response.json()
-    listing_id = listing['results'][0]['listing_id']
-    print(f'Listing created with ID: {listing_id}')
-else:
-    print(f'Failed to create listing. Status code: {response.status_code}')
+def create_digital_listing():
+    url = f'{base_url}application/shops/{shop_id}/listings'
+    listing_data = {
+        'title': 'Sample Digital Listing',
+        'description': 'This is a sample digital listing.',
+        'price': '25.00',
+        'quantity': 1,
+        'who_made': 'i_did',
+        'is_supply': False,
+        'when_made': 'made_to_order',
+        'is_digital': True
+    }
 
-# Step 2: Upload images to the listing
-if listing_id is not None:
-    image_url = f'https://api.etsy.com/v3/application/listings/{listing_id}/images'
+    response = requests.post(url, json=listing_data, headers=headers)
 
-    # Replace with paths to your image files
-    image_paths = [r"C:\Users\Rau\Documents\ShareX\Screenshots\2023-04\ES_nTqBrrhtrq.png"]
+    if response.status_code == 201:
+        listing_id = response.json()['results'][0]['listing_id']
+        print(f'Listing created with ID: {listing_id}')
+        return listing_id
+    else:
+        print(f'Failed to create listing. Status code: {response.status_code}, response text: {response.text}')
+        return None
 
-    for image_path in image_paths:
-        with open(image_path, 'rb') as img_file:
-            files = {'image': img_file}
-            response = requests.post(image_url, headers={'x-api-key': api_key}, files=files)
+def upload_digital_file(listing_id, file_path):
+    url = f'{base_url}application/listings/{listing_id}/files'
 
-            if response.status_code == 201:
-                print(f'Successfully uploaded image: {image_path}')
-            else:
-                print(f'Failed to upload image: {image_path}. Status code: {response.status_code}')
+    with open(file_path, 'rb') as file:
+        files = {'file': file}
+        response = requests.post(url, files=files, headers=headers)
+
+    if response.status_code == 201:
+        print(f'Successfully uploaded file: {file_path}')
+    else:
+        print(f'Failed to upload file: {file_path}. Status code: {response.status_code}, response text: {response.text}')
+
+listing_id = create_digital_listing()
+if listing_id:
+    file_path = r"C:\Users\Rau\Documents\ShareX\Screenshots\2023-04\ES_nTqBrrhtrq.png"
+    upload_digital_file(listing_id, file_path)
+
