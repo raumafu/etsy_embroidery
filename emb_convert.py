@@ -1,6 +1,4 @@
-from convert_functions import *  # Import all functions from the convert_functions module
-import threading
-import time
+from convert_functions import *  # Import all functions from the convert_functions modulee
 
 # Variables
 input_file = r"C:\Users\Rau\Desktop\emb_prep\input.pes"  # Input embroidery file path
