@@ -1,18 +1,44 @@
 from convert_functions import *
-
-input_folder = r"C:\Users\Rau\Desktop\emb_prep"
-output_folder = r"C:\Users\Rau\Desktop\emb_prep\output_files"
-input_file = r"C:\Users\Rau\Desktop\emb_prep\Máquina de Costura .xxx"
-output_file = r"C:\Users\Rau\Desktop\emb_prep\output_files\Máquina de Costura .pes"
-emb_extension_write = ["dst","exp", "jef", "pes", "vp3", "xxx", "emb"]
-emb_extension_read = ["dst","exp", "hus", "jef", "pes", "vp3", "xxx", "dgt", "sew", "pcs", "pcm", "csd", "pec", "shv", "vip", "art", "emb"]
+import threading
+import time
 
 
-#.get_as_stitchblock() returns a list of stitches
+input_file = r"C:\Users\Rau\Desktop\emb_prep\input.pes"
+output_folder = r"C:\Users\Rau\Desktop\emb_prep\scaled"
+hoop_center = (350, 350)
+#pattern = pyembroidery.read(input_file)
+# Define scale factors
+scale_factors = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+
+#Start Timer
+
+start_time = time.time()
+
+# Create a list to hold the threads
+threads = []
+
+# Create a thread for each scale factor
+for scale_factor in scale_factors:
+    # Create a new thread for this scale factor
+    thread = threading.Thread(target=resize_pattern, args=(input_file, output_folder, scale_factor))
+    # Add the thread to the list of threads
+    threads.append(thread)
+
+# Start all the threads
+for thread in threads:
+    thread.start()
+
+# Wait for all the threads to finish
+for thread in threads:
+    thread.join()
 
 
-#Create output folder if it doesn't exist
-makeDir(output_folder)
+#End timer
+end_time = time.time()
+
+elapsed_time = end_time - start_time
+print(f"Elapsed time: {elapsed_time:.2f} seconds")
 
 
-pyembroidery.convert(input_file, output_file)
+
+
