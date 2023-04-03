@@ -1,6 +1,8 @@
 import os
 import subprocess
-import shutil
+import shuti
+import threading
+import time
 
 def iterateFilesForExtensions(target_folder):
     file_data = []
