@@ -13,6 +13,19 @@ def makeDir(output_folder):
     return output_folder
 
 
+def convert_embroidery_to_image(input_file, output_file):
+    # Read embroidery file
+    pattern = pyembroidery.read(input_file)
+
+    # Create output folder if it does not exist
+    output_folder = os.path.dirname(output_file)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Write embroidery file as PNG
+    pyembroidery.write_png(pattern, output_file)
+
+
 def center_embroidery_pattern(pattern, hoop_center):
     # Get the design bounds
     min_x, min_y, max_x, max_y = pattern.bounds()
