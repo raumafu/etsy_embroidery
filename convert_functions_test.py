@@ -1,12 +1,18 @@
 import os
 import pyembroidery
 import math
-import time
 import subprocess
+import time
 
 #Variables
-naming = "BeachBallBuddies"
+source_folder = rf"C:\Users\Rau\Desktop\emb_prep"  # Input folder for the embroidery files
 zip_exe_path = r"C:\Program Files\7-Zip\7z.exe"
+extensions = ['pes', 'dst', 'jef', 'exp', 'vp3', 'xxx']
+hoop_center = (350, 350)  # Center coordinates of the embroidery hoop
+# Define scale factors to apply on the embroidery design
+scale_factors = [0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+
+
 
 def zip_folder(parent_folder, output_folder, zip_name, zip_exe_path):
     # Check if the 7zip command-line executable is available
