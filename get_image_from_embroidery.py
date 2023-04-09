@@ -1,11 +1,8 @@
 import pyembroidery
 import os
-from google.cloud import vision
-from google.cloud.vision_v1 import types
-from google.oauth2.service_account import Credentials
 
 # Read embroidery file
-input_file = r"C:\Users\Rau\Desktop\emb_prep\input.pes"  # Input embroidery file path
+input_file = r"C:\Users\Rau\Desktop\emb_prep\BeachBallBuddies.jef"  # Input embroidery file path
 output_file = r"C:\Users\Rau\Desktop\emb_prep\image.png"
 
 def convert_embroidery_to_image(input_file, output_file):
@@ -20,18 +17,29 @@ def convert_embroidery_to_image(input_file, output_file):
     # Write embroidery file as PNG
     pyembroidery.write_png(pattern, output_file)
 
-client = vision.ImageAnnotatorClient()
-file_name = output_file
+# convert_embroidery_to_image(input_file, output_file)
 
-# Loads the image into memory
-with open(file_name, 'rb') as image_file:
-    content = image_file.read()
-image = types.Image(content=content)
 
-# Performs label detection on the image file
-response = client.label_detection(image=image)
-labels = response.label_annotations
+def edit_image(input_image_path, output_image_path):
+    # Open the original image
+    image = Image.open(input_image_path)
 
-print('Labels:')
-for label in labels:
-    print(label.description)
+    # Create a white background with the recommended Etsy resolution
+    white_background = Image.new("RGB", (2000, 2000), "white")
+
+    # Calculate the position to center the original image on the white background
+    position = (
+        (white_background.width - image.width) // 2,
+        (white_background.height - image.height) // 2
+    )
+
+    # Paste the original image onto the white background
+    white_background.paste(image, position)
+
+    # Save the edited image
+    white_background.save(output_image_path)
+
+# Usage example
+input_image_path = r"C:\Users\Rau\Desktop\emb_prep\image.png"
+output_image_path = r"C:\Users\Rau\Desktop\emb_prep\imageEdited.png"
+edit_image(input_image_path, output_image_path)

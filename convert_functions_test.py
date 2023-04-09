@@ -2,6 +2,22 @@ import os
 import pyembroidery
 import math
 import time
+import subprocess
+
+#Variables
+naming = "BeachBallBuddies"
+zip_exe_path = r"C:\Program Files\7-Zip\7z.exe"
+
+def zip_folder(parent_folder, output_folder, zip_name, zip_exe_path):
+    # Check if the 7zip command-line executable is available
+    try:
+        subprocess.run([zip_exe_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"{zip_exe_path} not found. Make sure the path is correct and 7zip is installed.")
+
+    # Compress the parent folder using 7zip
+    zip_command = [zip_exe_path, "a", "-tzip", zip_name, output_folder]
+    subprocess.run(zip_command, cwd=parent_folder)
 
 
 def makeDir(output_folder):
@@ -67,8 +83,10 @@ def resize_pattern(input_file, output_folder, scale_factor, extension, hoop_cent
     width, height = get_size(input_file)
     new_width = math.ceil(width * scale_factor)
     new_height = math.ceil(height * scale_factor)
-    output_file = os.path.join(output_extension_folder, f"scaled_{new_width / 100 } cm x {new_height / 100 } cm .{extension}")
+    new_width_inch = new_width / 254.0  # Convert millimeters to inches (1 inch = 25.4 mm)
+    new_height_inch = new_height / 254.0
+    output_file = os.path.join(
+        output_extension_folder,
+        f"{new_width / 100:.2f} cm x {new_height / 100:.2f} cm ({new_width_inch:.2f} in x {new_height_inch:.2f} in).{extension}"
+    )
     pyembroidery.write(pattern, output_file)
-
-    # Print the size of the resized embroidery file
-    # print(f"Resized {scale_factor}x: {new_width} x {new_height}")

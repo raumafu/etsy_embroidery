@@ -1,8 +1,9 @@
 from convert_functions_test import *  # Import all functions from the convert_functions module
 
 # Variables
-input_file = r"C:\Users\Rau\Desktop\emb_prep\input.pes"  # Input embroidery file path
-output_folder = r"C:\Users\Rau\Desktop\emb_prep\scaled"  # Output folder for the scaled embroidery files
+naming = "BeachBallBuddies"
+input_file = rf"C:\Users\Rau\Desktop\emb_prep\{naming}.jef"  # Input embroidery file path
+output_folder = rf"C:\Users\Rau\Desktop\emb_prep\{naming}"  # Output folder for the scaled embroidery files
 hoop_center = (350, 350)  # Center coordinates of the embroidery hoop
 extensions = ['pes', 'dst', 'jef', 'exp', 'vp3', 'xxx']
 
@@ -18,6 +19,15 @@ for extension in extensions:
     for scale_factor in scale_factors:
         resize_pattern(input_file, output_folder, scale_factor, extension, hoop_center)
 
+
+#########################
+# Variables
+parent_folder = os.path.dirname(output_folder)
+zip_name = os.path.join(parent_folder, f"{naming}.zip")
+# Call the zip_folder function after the conversion loop
+zip_folder(parent_folder, output_folder, zip_name, zip_exe_path)
+
+#################
 # End timer
 end_time = time.time()
 
