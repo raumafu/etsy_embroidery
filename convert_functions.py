@@ -3,14 +3,35 @@ import pyembroidery
 import math
 import subprocess
 import time
+import shutil
 
 #Variables
 source_folder = rf"C:\Users\Rau\Desktop\emb_prep"  # Input folder for the embroidery files
+work_files_folder = r"C:\Users\Rau\Desktop\work_files"
+to_be_uploaded_folder = r"C:\Users\Rau\Desktop\to_be_uploaded"
+to_get_images_folder = r"C:\Users\Rau\Desktop\to_get_images"
 zip_exe_path = r"C:\Program Files\7-Zip\7z.exe"
 extensions = ['pes', 'dst', 'jef', 'exp', 'vp3', 'xxx']
 hoop_center = (350, 350)  # Center coordinates of the embroidery hoop
 # Define scale factors to apply on the embroidery design
 scale_factors = [0.3, 0.4, 0.5, 0.6, 0.7, 0.9, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
+
+files = os.listdir(source_folder)
+# Create necessary folders if they don't exist
+os.makedirs(work_files_folder, exist_ok=True)
+os.makedirs(to_be_uploaded_folder, exist_ok=True)
+os.makedirs(to_get_images_folder, exist_ok=True)
+
+def process_input_file(input_file, output_folder, extensions, scale_factors, hoop_center):
+    for extension in extensions:
+        for scale_factor in scale_factors:
+            resize_pattern(input_file, output_folder, scale_factor, extension, hoop_center)
+
+
+def move_files(src, dest):
+    shutil.move(src, dest)
+    print(f"Moved {src} to {dest}")
+
 
 
 
